@@ -1,12 +1,10 @@
-import bpy
-import mathutils
-from math import pi
 from bpy_extras.object_utils import world_to_camera_view
 
-import utils
+import bpy
+import material
+import mathutils
 import paper
-
-TAU = 2*pi
+import util
 
 # TODO
 # Setup scene (backdrop, sheet, camera)
@@ -32,31 +30,31 @@ TAU = 2*pi
     # Keep track of surface parameters and edge positions
 # Create tfrecord file
 
-# Remove all elements
-utils.removeAll()
-
+# Reset scene
+util.remove_all()
+util.setup_scene(640, 480)
 
 # Set cursor to (0, 0, 0)
 bpy.context.scene.cursor_location = (0, 0, 0)
 
 # Create camera
-target = utils.target()
-camera = utils.camera((0, 0, 10), target)
+target = util.create_target()
+camera = util.create_camera((0, 0, 10), target)
 
 # Create lamps
 #utils.rainbowLights(10, 300, 3)
-utils.lamp((0,0,10))
-utils.setAmbientOcclusion()
+util.create_light((0, 0, 10))
+util.set_ambient_occlusion()
 
 # Create paper
-paperGen = paper.randomPaper()
+paperGen = paper.create_random_paper()
 minHeight, mesh = paper.generate(20, 20, paperGen)
-utils.setSmooth(mesh)
+material.set_smooth(mesh)
 
 # Render scene
-utils.renderToFolder('render', 'paper', 640, 480)
+util.render_scene('paper')
 
-# Find screen coordinates (relies on render)
+# Find labels for training
 scene = bpy.context.scene
 cam = scene.camera
 print('Labels:')
