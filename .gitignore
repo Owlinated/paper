@@ -108,5 +108,5 @@ docs/_build/
 target/
 
 # Paper specific
-gen/render/
-gen/paper.png
+image_generator/render/
+image_generator/paper.png
