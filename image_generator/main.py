@@ -1,3 +1,5 @@
+import random
+
 from bpy_extras.object_utils import world_to_camera_view
 
 import bpy
@@ -34,6 +36,8 @@ import util
 util.remove_all()
 util.setup_scene(640, 480)
 
+def rand(): return random.gauss(.5,.5)
+
 # Set cursor to (0, 0, 0)
 bpy.context.scene.cursor_location = (0, 0, 0)
 
@@ -42,9 +46,16 @@ target = util.create_target()
 camera = util.create_camera((0, 0, 10), target)
 
 # Create lamps
-#utils.rainbowLights(10, 300, 3)
-util.create_light((0, 0, 10))
+util.create_light(origin=(0, 0, 10), type='POINT', energy=rand(), color=(rand(), rand(), rand()))
 util.set_ambient_occlusion()
+
+# Create backdrop
+cubesize = 5
+bpy.ops.mesh.primitive_cube_add(location=(0,0,-cubesize))
+cube = bpy.context.scene.objects['Cube']
+cube.scale = (cubesize, cubesize, cubesize)
+cube_material = material.create_diffuse_material((rand(),rand(),rand()))
+cube.data.materials.append(cube_material)
 
 # Create paper
 paperGen = paper.create_random_paper()
