@@ -109,3 +109,4 @@ target/
 
 # Paper specific
 gen/render/
+gen/paper.png
