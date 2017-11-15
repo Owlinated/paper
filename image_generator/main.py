@@ -39,8 +39,9 @@ import util
 # Create tfrecord file
 
 # We use 0MQ to send the rendered images
-ctx = zmq.Context()
-socket = ctx.socket(zmq.PUSH)
+socket = zmq.Context().socket(zmq.PUSH)
+# Limit number of buffered messages
+socket.set_hwm(8)
 socket.connect('ipc:///tmp/paper-tensor-ipc')
 
 # We use FIFO to trick blender into rendering into memory
