@@ -130,12 +130,14 @@ def create_light(origin, type='POINT', energy=1, color=(1, 1, 1), target=None):
     return obj
 
 
-def render_scene(render_name='render'):
+def render_scene(filepath, file_format = 'BMP'):
     # Assert folder exists
     """Render scene to file
 
     Args:
         render_name: Output file name
     """
-    bpy.context.scene.render.filepath = render_name + '.png'
+    render = bpy.context.scene.render
+    render.image_settings.file_format = file_format
+    render.filepath = filepath
     bpy.ops.render.render(write_still=True)
