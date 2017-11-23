@@ -10,6 +10,7 @@ from bpy_extras.object_utils import world_to_camera_view
 import bpy
 import generator
 import util
+# This script renders random scenes in a loop and sends them over ipc
 
 # We use 0MQ to send the rendered images
 socket = zmq.Context().socket(zmq.PUSH)
