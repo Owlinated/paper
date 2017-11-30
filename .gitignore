@@ -110,3 +110,5 @@ target/
 # Paper specific
 image_generator/render/
 image_generator/paper.png
+
+\.idea/other\.xml
