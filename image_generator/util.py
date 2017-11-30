@@ -32,6 +32,7 @@ def remove_all():
     """Remove all elements in scene
     """
     bpy.ops.object.select_by_layer()
+    bpy.context.scene.camera.select = False
     bpy.ops.object.delete(use_global=False)
 
 
@@ -73,22 +74,42 @@ def create_target(origin=(0, 0, 0)):
     return tar
 
 
-def create_camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, type='PERSP', ortho_scale=6):
+def create_camera():
     """Create camera and matching object
-
-    Args:
-        origin: Location of camera
-        target: Target for camera constraint
-        lens: Camera lens size
-        clip_start: Near clipping plane distance
-        clip_end: Far clipping plane distance
-        type: Camera perspective type ('PERSP', 'ORTHO', 'PANO')
-        ortho_scale: Zoom for orthographic perspective type
 
     Returns:
         Created camera
     """
     cam = bpy.data.cameras.new("Camera")
+
+    # Link object to scene
+    obj = bpy.data.objects.new("CameraObj", cam)
+    bpy.context.scene.objects.link(obj)
+    bpy.context.scene.camera = obj
+    return obj
+
+def update_camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, type='PERSP', ortho_scale=6):
+    """Update camera and matching object
+
+        Args:
+            origin: Location of camera
+            target: Target for camera constraint
+            lens: Camera lens size
+            clip_start: Near clipping plane distance
+            clip_end: Far clipping plane distance
+            type: Camera perspective type ('PERSP', 'ORTHO', 'PANO')
+            ortho_scale: Zoom for orthographic perspective type
+
+        Returns:
+            Created camera
+        """
+    # Find camera
+    obj = bpy.context.scene.camera
+    if obj is None:
+        obj = create_camera()
+    cam = obj.data
+
+    # Update cam
     cam.lens = lens
     cam.clip_start = clip_start
     cam.clip_end = clip_end
@@ -96,14 +117,10 @@ def create_camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, ty
     if type == 'ORTHO':
         cam.ortho_scale = ortho_scale
 
-    # Link object to scene
-    obj = bpy.data.objects.new("CameraObj", cam)
+    # Update object
     obj.location = origin
-    bpy.context.scene.objects.link(obj)
-    bpy.context.scene.camera = obj
 
     if target: track_to_constraint(obj, target)
-    return obj
 
 
 def create_light(origin, type='POINT', energy=1, color=(1, 1, 1), target=None):

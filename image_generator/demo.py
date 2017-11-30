@@ -2,10 +2,15 @@ import numpy as np
 from bpy_extras.object_utils import world_to_camera_view
 
 import bpy
+import importlib
 import generator
 import util
 
-# This demo sets up a single scene. Use for debuggin in blender
+# Force reload to apply changes
+importlib.reload(generator)
+importlib.reload(util)
+
+# This demo sets up a single scene. Use for debugging in blender
 
 scene = bpy.context.scene
 util.remove_all()

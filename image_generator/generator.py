@@ -17,7 +17,7 @@ def rand():
 def setup_scene(paper_resolution=20):
     # Create camera
     target = util.create_target()
-    camera = util.create_camera((0, 0, 10), target)
+    util.update_camera((0, 0, 10), target)
 
     # Create lamps
     util.create_light(origin=(0, 0, 10), type='POINT', energy=rand(), color=(rand(), rand(), rand()))
