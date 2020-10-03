@@ -1,44 +1,27 @@
-import random
-
-import bpy
-
-import material
 import mathutils
 import paper
 import util
 
 
-def rand():
-    """Boring random number generator: gauss around 0.5
-    """
-    return random.gauss(.5, .5)
-
-
-def setup_scene(paper_resolution=20):
+def setup_scene():
     # Create camera
-    target = util.create_target()
-    util.update_camera((0, 0, 10), target)
+    target = util.ensure_target()
+    util.ensure_camera((0, 0, 10), target)
 
-    # Create lamps
-    util.create_light(origin=(0, 0, 10), type='POINT', energy=rand(), color=(rand(), rand(), rand()))
-    util.set_ambient_occlusion()
+    # Create light
+    util.ensure_light(origin=(0, 0, 10))
 
     # Create backdrop
-    cubesize = 5
-    bpy.ops.mesh.primitive_cube_add(location=(0, 0, -cubesize))
-    cube = bpy.context.scene.objects['Cube']
-    cube.scale = (cubesize, cubesize, cubesize)
-    cube_material = material.create_diffuse_material((rand(), rand(), rand()))
-    cube.data.materials.append(cube_material)
+    util.ensure_cube()
 
     # Create paper
     paperGen = paper.create_random_paper()
-    minHeight, mesh = paper.generate(paper_resolution, paper_resolution, paperGen)
-    material.set_smooth(mesh)
+    minHeight = util.ensure_paper(paperGen)
+
+    def adjust_height(world): return mathutils.Vector(
+        (world[0], world[1], world[2] - minHeight))
 
     # Return lambda that maps paper coordinates to world
-    def adjust_height(world): return mathutils.Vector((world[0], world[1], world[2] - minHeight))
-
     return lambda coord: adjust_height(paperGen(*coord))
 
     # TODO

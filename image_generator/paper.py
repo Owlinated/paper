@@ -2,6 +2,7 @@ import random
 import sys
 
 import bpy
+from bpy.types import Mesh
 
 
 def create_random_paper(width=2.97, height=2.10, deviation=.1):
@@ -10,13 +11,14 @@ def create_random_paper(width=2.97, height=2.10, deviation=.1):
     Args:
         width: Width of mesh
         height: Height of mesh
-        deviation: Standard deviation of parameters
+        deviation: Standard deviation of parameters 
 
     Returns:
         Surface generation function
     """
-    return create_paper(height, width, \
-                        random.gauss(0, deviation), random.gauss(0, deviation), random.gauss(0, deviation), \
+    return create_paper(height, width,
+                        random.gauss(0, deviation), random.gauss(
+                            0, deviation), random.gauss(0, deviation),
                         random.gauss(0, deviation), random.gauss(0, deviation), random.gauss(0, deviation))
 
 
@@ -35,12 +37,13 @@ def create_paper(width, height, x1, x2, x3, y1, y2, y3):
     def surface(u, v):
         u = 2 * u - 1
         v = 2 * v - 1
-        point = (u * height, \
-                 v * width, \
+        point = (u * height,
+                 v * width,
                  u * x1 + u ** 2 * x2 + u ** 3 * x3 + v * y1 + v ** 2 * y2 + v ** 3 * y3)
         return point
 
     return surface
+
 
 def generate(n, m, surface_gen):
     """Generate a sheet of paper from generator function
@@ -75,7 +78,8 @@ def get_surface_height(n, m, surface_gen):
             u = row / n
             v = col / m
             point = surface_gen(u, v)
-            if point[2] < height: height = point[2]
+            if point[2] < height:
+                height = point[2]
     return height
 
 
@@ -92,7 +96,7 @@ def create_surface(n, m, height, surface_gen):
     Returns:
         Generated mesh
     """
-    verts = list()
+    vertices = list()
     faces = list()
 
     # Create uniform n by m grid
@@ -104,28 +108,36 @@ def create_surface(n, m, height, surface_gen):
             # Create vertex with function
             point = surface_gen(u, v)
             point = (point[0], point[1], point[2] - height)
-            verts.append(point)
+            vertices.append(point)
 
             # Create face
             rowNext = row + 1
             colNext = col + 1
 
             if rowNext < n and colNext < m:
-                faces.append(((col * n) + rowNext, \
-                              (colNext * n) + rowNext, \
-                              (colNext * n) + row, \
+                faces.append(((col * n) + rowNext,
+                              (colNext * n) + rowNext,
+                              (colNext * n) + row,
                               (col * n) + row))
 
-    print('verts : ' + str(len(verts)))
+    print('vertices : ' + str(len(vertices)))
     print('faces : ' + str(len(faces)))
 
     # Create mesh and object
-    mesh = bpy.data.meshes.new('PaperMesh')
+    mesh: Mesh = bpy.data.meshes.new('PaperMesh')
     obj = bpy.data.objects.new('Paper', mesh)
+
     # Link object to scene
-    bpy.context.scene.objects.link(obj)
-    # Create mesh from given verts and faces
-    mesh.from_pydata(verts, [], faces)
+    bpy.context.scene.collection.objects.link(obj)
+
+    # Create mesh from given vertices and faces
+    mesh.from_pydata(vertices, [], faces)
+
     # Update mesh with new data
     mesh.update(calc_edges=True)
+
+    # Render mesh smooth
+    for polygon in mesh.polygons:
+        polygon.use_smooth = True
+
     return obj

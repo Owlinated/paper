@@ -11,19 +11,19 @@ importlib.reload(generator)
 importlib.reload(util)
 
 # This demo sets up a single scene. Use for debugging in blender
-
-scene = bpy.context.scene
-util.remove_all()
-util.setup_scene(640, 480)
-scene.cursor_location = (0, 0, 0)
-
+util.setup_scene(480, 640)
 paper_to_world = generator.setup_scene()
 
-# Find label for training
+
 def drop_y(camera): return (camera[0], camera[1])
 
-def to_camera(world_vector): return world_to_camera_view(scene, scene.camera, world_vector)
 
-label = np.array(list(map(drop_y, map(to_camera, map(paper_to_world, [(0, 0), (0, 1), (1, 0), (1, 1)])))))
+def to_camera(world_vector): return world_to_camera_view(
+    bpy.context.scene, bpy.context.scene.camera, world_vector)
+
+
+# Find label for training
+label = np.array(list(map(drop_y, map(to_camera, map(
+    paper_to_world, [(0, 0), (0, 1), (1, 0), (1, 1)])))))
 print('Label:')
 print(label)
