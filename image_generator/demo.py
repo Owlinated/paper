@@ -14,6 +14,10 @@ importlib.reload(util)
 util.setup_scene()
 paper_to_world = generator.setup_scene()
 
+# Cycles for X, workbench for y
+util.cycles()
+util.workbench()
+
 
 def drop_y(camera): return (camera[0], camera[1])
 

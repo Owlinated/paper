@@ -27,12 +27,6 @@ def setup_scene(res_x=512, res_y=512, res_percentage=100):
     scene.render.resolution_percentage = res_percentage
     scene.cursor.location = (0, 0, 0)
 
-    scene.render.engine = "CYCLES"
-    scene.cycles.device = "GPU"
-    scene.cycles.use_ambient_occlusion = True
-    scene.cycles.samples = 512
-    scene.cycles.use_adaptive_sampling = True
-
 
 def track_to_constraint(obj, target):
     """Setup tracking constraint for object
@@ -122,6 +116,7 @@ def ensure_cube(cubesize=8):
     cube.location = (0, 0, -cubesize)
     cube.scale = (cubesize, cubesize, cubesize)
 
+    cube.color = (0, 0, 0, 1)
     cube_material = bpy.data.materials.get('CubeMaterial')
     if (cube_material is None):
         cube_material = bpy.data.materials.new('CubeMaterial')
@@ -141,6 +136,7 @@ def ensure_paper(paperGen, paper_resolution=20):
     minHeight, paper_mesh = paper.generate(
         paper_resolution, paper_resolution, paperGen)
 
+    paper_mesh.color = (1, 1, 1, 1)
     paper_material = bpy.data.materials.get('PaperMaterial')
     if (paper_material is None):
         paper_material = bpy.data.materials.new('PaperMaterial')
@@ -178,6 +174,24 @@ def ensure_light(origin, type='POINT', energy=rand(), color=(rand(), rand(), ran
         track_to_constraint(obj, target)
 
     return obj
+
+
+def cycles():
+    scene = bpy.context.scene
+
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "GPU"
+    scene.cycles.use_ambient_occlusion = True
+    scene.cycles.samples = 512
+    scene.cycles.use_adaptive_sampling = True
+
+
+def workbench():
+    scene = bpy.context.scene
+
+    scene.render.engine = "BLENDER_WORKBENCH"
+    scene.display.shading.light = "FLAT"
+    scene.display.shading.color_type = "OBJECT"
 
 
 def render_scene(filepath, file_format='PNG'):

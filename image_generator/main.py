@@ -23,8 +23,11 @@ def reset_render_scene(index):
     label = np.array(list(map(drop_y, map(to_camera, map(
         paper_to_world, [(0, 0), (0, 1), (1, 0), (1, 1)])))))
 
-    # Render scene to fifo
-    util.render_scene(f'{os.getcwd()}/training/{index}.png')
+    util.cycles()
+    util.render_scene(f'{os.getcwd()}/training/{index:04}x.png')
+
+    util.workbench()
+    util.render_scene(f'{os.getcwd()}/training/{index:04}y.png')
 
 
 index = 0
