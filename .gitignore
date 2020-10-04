@@ -116,3 +116,5 @@ image_generator/paper.png
 image_generator/training/
 
 mask_estimator/fit/
+
+training/

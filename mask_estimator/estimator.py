@@ -1,14 +1,5 @@
-import numpy as np
-import os
-import time
-import datetime
-import PIL
-import PIL.Image
 import tensorflow as tf
-from tensorflow._api.v2 import data
 from tensorflow.python.data.ops.dataset_ops import AUTOTUNE
-from tensorflow.python.framework.ops import Tensor
-import tensorflow_datasets as tfds
 from matplotlib import pyplot as plt
 from IPython import display
 
@@ -138,7 +129,7 @@ def generate_images(model, x, y):
 
 
 def main():
-    path = "../image_generator/training/"
+    path = "../training/"
     indexes = [(f"{path}{index:04}x.png", f"{path}{index:04}y.png")
                for index in range(1000)]
     dataset = tf.data.Dataset.from_tensor_slices(indexes)

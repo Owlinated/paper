@@ -24,10 +24,10 @@ def reset_render_scene(index):
         paper_to_world, [(0, 0), (0, 1), (1, 0), (1, 1)])))))
 
     util.cycles()
-    util.render_scene(f'{os.getcwd()}/training/{index:04}x.png')
+    util.render_scene(f'{os.getcwd()}/../training/{index:04}x.png')
 
     util.workbench()
-    util.render_scene(f'{os.getcwd()}/training/{index:04}y.png')
+    util.render_scene(f'{os.getcwd()}/../training/{index:04}y.png')
 
 
 index = 0
