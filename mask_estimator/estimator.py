@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from IPython import display
 
 BUFFER_SIZE = 400
-BATCH_SIZE = 1
+BATCH_SIZE = 8
 IMG_WIDTH = 512
 IMG_HEIGHT = 512
 OUTPUT_CHANNELS = 1
@@ -22,6 +22,14 @@ def parse_pair(path):
     y = tf.cast(y_image, tf.float32)
 
     return x / 255-0, y / 255.0
+
+
+def load_dataset(path, count):
+    indexes = [(f"{path}{index:04}x.png", f"{path}{index:04}y.png")
+               for index in range(count)]
+    dataset = tf.data.Dataset.from_tensor_slices(indexes)
+    dataset = dataset.map(parse_pair, num_parallel_calls=AUTOTUNE)
+    return dataset
 
 
 def downsample(filters, size, apply_batchnorm=True):
@@ -129,24 +137,25 @@ def generate_images(model, x, y):
 
 
 def main():
-    path = "../training/"
-    indexes = [(f"{path}{index:04}x.png", f"{path}{index:04}y.png")
-               for index in range(1000)]
-    dataset = tf.data.Dataset.from_tensor_slices(indexes)
-    dataset = dataset.map(parse_pair, num_parallel_calls=AUTOTUNE)
-    dataset = dataset.shuffle(BUFFER_SIZE)
-    dataset = dataset.batch(BATCH_SIZE)
+    training = load_dataset("../training/", 1000)
+    training = training.shuffle(BUFFER_SIZE)
+    training = training.batch(BATCH_SIZE)
+    test = load_dataset("../test/", 9)
+    test = test.batch(1)
 
     model = Model()
+    model.compile("Adam", "BinaryCrossentropy")
     print(model.summary())
 
-    for example_input, example_target in dataset.take(1):
+    epochs = 100
+    for epoch in range(epochs):
+        print(f"epoch {epoch + 1} of {epochs}")
+        model.fit(training)
+        model.save("model.h5")
+
+    for example_input, example_target in training.take(1):
         generate_images(model, example_input, example_target)
-
-    model.compile("Adam", "BinaryCrossentropy")
-    model.fit(dataset)
-
-    for example_input, example_target in dataset.take(1):
+    for example_input, example_target in test:
         generate_images(model, example_input, example_target)
 
 

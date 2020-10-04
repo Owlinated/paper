@@ -118,3 +118,5 @@ image_generator/training/
 mask_estimator/fit/
 
 training/
+
+mask_estimator/model.h5
