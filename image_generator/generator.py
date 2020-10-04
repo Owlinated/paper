@@ -6,7 +6,7 @@ import util
 def setup_scene():
     # Create camera
     target = util.ensure_target()
-    util.ensure_camera((0, 0, 8), target)
+    util.ensure_camera((util.rand(), util.rand(), 8 + util.rand()), target)
 
     # Create light
     util.ensure_light(origin=(0, 0, 10))

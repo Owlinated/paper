@@ -12,7 +12,7 @@ def rand():
     return random.gauss(.5, .5)
 
 
-def setup_scene(res_x=800, res_y=800, res_percentage=100):
+def setup_scene(res_x=512, res_y=512, res_percentage=100):
     """Setup scene rendering options
 
     Args:
@@ -113,7 +113,7 @@ def ensure_camera(origin, target=None, lens=35, clip_start=0.1, clip_end=200, ty
         track_to_constraint(obj, target)
 
 
-def ensure_cube(cubesize=5):
+def ensure_cube(cubesize=8):
     cube = bpy.context.scene.objects.get('Cube')
     if cube is None:
         bpy.ops.mesh.primitive_cube_add()

@@ -11,7 +11,7 @@ importlib.reload(generator)
 importlib.reload(util)
 
 # This demo sets up a single scene. Use for debugging in blender
-util.setup_scene(480, 640)
+util.setup_scene()
 paper_to_world = generator.setup_scene()
 
 

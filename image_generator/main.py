@@ -10,7 +10,7 @@ import util
 
 def reset_render_scene(index):
     # Reset scene
-    util.setup_scene(480, 640)
+    util.setup_scene()
 
     paper_to_world = generator.setup_scene()
 
