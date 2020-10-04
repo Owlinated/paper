@@ -114,3 +114,5 @@ image_generator/paper.png
 \.idea/other\.xml
 
 image_generator/training/
+
+mask_estimator/fit/
