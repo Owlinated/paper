@@ -1,0 +1,1 @@
+blender --background --python .\image_generator\bootstrap.py

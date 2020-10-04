@@ -1,24 +1,14 @@
-import os
-import tempfile
-from threading import Thread
-
 import numpy as np
-from PIL import Image
 from bpy_extras.object_utils import world_to_camera_view
 
 import bpy
+import os
 import generator
 import util
-# This script renders random scenes in a loop and sends them over ipc
-
-# Keep track of thread and current label
-label = None
-index = 0
+# This script renders random scenes in a loop
 
 
-def reset_render_scene():
-    global label, thread
-
+def reset_render_scene(index):
     # Reset scene
     util.setup_scene(480, 640)
 
@@ -34,8 +24,10 @@ def reset_render_scene():
         paper_to_world, [(0, 0), (0, 1), (1, 0), (1, 1)])))))
 
     # Render scene to fifo
-    util.render_scene(f'training/{index}.png')
+    util.render_scene(f'{os.getcwd()}/training/{index}.png')
 
 
+index = 0
 while True:
-    reset_render_scene()
+    reset_render_scene(index)
+    index += 1

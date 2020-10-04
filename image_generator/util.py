@@ -27,8 +27,11 @@ def setup_scene(res_x=800, res_y=800, res_percentage=100):
     scene.render.resolution_percentage = res_percentage
     scene.cursor.location = (0, 0, 0)
 
-    bpy.context.scene.world.cycles.use_ambient_occlusion = True
-    bpy.context.scene.world.cycles.samples = 20
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "GPU"
+    scene.cycles.use_ambient_occlusion = True
+    scene.cycles.samples = 512
+    scene.cycles.use_adaptive_sampling = True
 
 
 def track_to_constraint(obj, target):

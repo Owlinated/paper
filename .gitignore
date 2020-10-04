@@ -112,3 +112,5 @@ image_generator/render/
 image_generator/paper.png
 
 \.idea/other\.xml
+
+image_generator/training/
